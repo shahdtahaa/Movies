@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:movies/splashscreen.dart';
+import 'HomeScreen.dart';
+import 'MovieDetails/MovieDetails_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -11,10 +14,17 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      initialRoute: ,
-      debugShowCheckedModeBanner: false,
-      routes:{
+        initialRoute: Splashscreen.routeName,
+        debugShowCheckedModeBanner: false,
+        routes: {
+          Splashscreen.routeName:(context)=>Splashscreen(),
+          HomeScreen.routeName: (context) => HomeScreen(),
+          MoviedetailsScreen.routeName: (context) {
+            final movieId = ModalRoute.of(context)!.settings.arguments as int;
+            return MoviedetailsScreen(movieId: movieId);
+          },
+        },
 
-        }
     );
+  }
 }
