@@ -1,8 +1,9 @@
 import 'package:flutter/cupertino.dart';
 
-import '../UI/newReleasesItems.dart';
-import '../UI/popularItems.dart';
-import '../UI/recomendedItems.dart';
+import '../HomeUI/newReleasesItems.dart';
+import '../HomeUI/popularItems.dart';
+import '../HomeUI/recomendedItems.dart';
+
 
 class HomeTab extends StatelessWidget {
   const HomeTab({super.key});

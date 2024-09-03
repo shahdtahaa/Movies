@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:movies/splashscreen.dart';
 import 'HomeScreen.dart';
-import 'MovieDetails/MovieDetails_screen.dart';
+import 'MovieDetails_screen.dart';
 
 void main() {
   runApp(const MyApp());

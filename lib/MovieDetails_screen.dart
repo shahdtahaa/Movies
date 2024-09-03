@@ -2,8 +2,8 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
-import '../Models/more_like_this_Model.dart';
-import '../Models/moviesdetailsModel.dart';
+import 'Models/more_like_this_Model.dart';
+import 'Models/moviesdetailsModel.dart';
 
 class MoviedetailsScreen extends StatefulWidget {
   static const String routeName = "Movie details";
@@ -69,11 +69,11 @@ class _MoviedetailsScreenState extends State<MoviedetailsScreen> {
         backgroundColor: Color(0xff1D1E1D),
         title: Text(
           moviesdetailsModel?.title ?? 'Unknown Title',
-          style: TextStyle(
+          style:GoogleFonts.inter(
             color: Colors.white,
             fontSize: 20,
             fontWeight: FontWeight.w400,
-          ),
+          )
         ),
       ),
       body: moviesdetailsModel == null
@@ -268,11 +268,11 @@ class _MoviedetailsScreenState extends State<MoviedetailsScreen> {
                     children: [
                       Text(
                         'More Like This',
-                        style: TextStyle(
+                        style:GoogleFonts.inter(
                           color: Colors.white,
                           fontSize: 16,
                           fontWeight: FontWeight.w500,
-                        ),
+                        )
                       ),
                       SizedBox(height: 4),
                       SingleChildScrollView(
@@ -339,7 +339,7 @@ class _MoviedetailsScreenState extends State<MoviedetailsScreen> {
                                             moviesdetailsModel?.voteAverage != null
                                                 ? moviesdetailsModel!.voteAverage!.toStringAsFixed(1)
                                                 : 'No rating',
-                                            style: TextStyle(
+                                            style:GoogleFonts.poppins(
                                               color: Colors.white,
                                               fontSize: 12,
                                               fontWeight: FontWeight.w400,
@@ -350,7 +350,7 @@ class _MoviedetailsScreenState extends State<MoviedetailsScreen> {
                                       ),
                                       Text(
                                         movie.title ?? 'Unknown Title',
-                                        style: TextStyle(
+                                        style:GoogleFonts.poppins(
                                           color: Colors.white,
                                           fontSize: 10,
                                           fontWeight: FontWeight.w400,
