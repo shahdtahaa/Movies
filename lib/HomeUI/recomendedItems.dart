@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import '../Models/topRatedModel.dart';
-import '../MovieDetails_screen.dart';
+import '../MovieDetailsScreen/MovieDetails_screen.dart';
 
 class Recomendeditems extends StatefulWidget {
   const Recomendeditems({super.key});

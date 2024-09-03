@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import '../Models/upComingModel.dart';
-import '../MovieDetails_screen.dart';
+import '../MovieDetailsScreen/MovieDetails_screen.dart';
 
 class Newreleasesitems extends StatefulWidget {
   const Newreleasesitems({super.key});
