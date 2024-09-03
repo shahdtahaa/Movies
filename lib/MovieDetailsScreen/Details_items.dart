@@ -131,22 +131,24 @@ class MovieHeader extends StatelessWidget {
                             color: Color(0xffFFBB3B),
                             size: 17, // Adjust size as needed
                           ),
-                          SizedBox(width: 4),
-                          Text(
-                            movieDetails.voteAverage != null
-                                ? movieDetails.voteAverage!.toStringAsFixed(1)
-                                : 'No rating',
-                            style: GoogleFonts.poppins(
-                              color: Colors.white,
-                              fontSize: 15, // Adjust font size as needed
-                              fontWeight: FontWeight.w400,
-                            ),
+
+                              Text(
+                                movieDetails.voteAverage != null
+                                    ? movieDetails.voteAverage!.toStringAsFixed(1)
+                                    : 'No rating',
+                                style: GoogleFonts.poppins(
+                                  color: Colors.white,
+                                  fontSize: 13, // Adjust font size as needed
+                                  fontWeight: FontWeight.w400,
+                                ),
+                              ),
+                            ],
                           ),
                         ],
                       ),
-                    ],
+
                   ),
-                ),
+
               ],
             ),
           ),
