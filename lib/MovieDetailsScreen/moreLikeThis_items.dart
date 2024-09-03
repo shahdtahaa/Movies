@@ -21,7 +21,7 @@ class MoreLikeThisSection extends StatelessWidget {
         ? Center(child: CircularProgressIndicator())
         : Container(
       width: width,
-      height: height * 0.30, // Adjust height to be less
+      height: height * 0.30,
       color: Color(0xff282A28),
       child: Padding(
         padding: const EdgeInsets.only(left: 8.0),
@@ -47,8 +47,8 @@ class MoreLikeThisSection extends StatelessWidget {
                       onTap: () => onMovieTap(movie.id!),
                       child: Container(
                         width: width * 0.25,
-                        height: 240,// Adjust width as needed
-                        margin: EdgeInsets.symmetric(horizontal: 4.0), // Adjust margin
+                        height: 240,
+                        margin: EdgeInsets.symmetric(horizontal: 4.0),
                         child: Container(
                           decoration: BoxDecoration(
                             color: Color(0xff343534),
@@ -58,8 +58,8 @@ class MoreLikeThisSection extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Container(
-                                width: width * 0.26, // Adjust width as needed
-                                height: height * 0.13, // Adjust height to be less
+                                width: width * 0.26,
+                                height: height * 0.13,
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(5),
                                   image: DecorationImage(
@@ -84,7 +84,7 @@ class MoreLikeThisSection extends StatelessWidget {
                                     Icon(
                                       Icons.star_rounded,
                                       color: Color(0xffFFBB3B),
-                                      size: 12, // Adjust size as needed
+                                      size: 12,
                                     ),
                                     SizedBox(width: 4),
                                     Text(
@@ -93,7 +93,7 @@ class MoreLikeThisSection extends StatelessWidget {
                                           : 'No rating',
                                       style: GoogleFonts.poppins(
                                         color: Colors.white,
-                                        fontSize: 10, // Adjust font size as needed
+                                        fontSize: 10,
                                         fontWeight: FontWeight.w400,
                                       ),
                                     ),
@@ -106,7 +106,7 @@ class MoreLikeThisSection extends StatelessWidget {
                                   movie.title ?? 'Unknown Title',
                                   style: GoogleFonts.poppins(
                                     color: Colors.white,
-                                    fontSize: 9, // Adjust font size as needed
+                                    fontSize: 9,
                                     fontWeight: FontWeight.w400,
                                   ),
                                   overflow: TextOverflow.visible,
@@ -118,7 +118,7 @@ class MoreLikeThisSection extends StatelessWidget {
                                   movie.releaseDate ?? 'Unknown release date',
                                   style: TextStyle(
                                       color: Color(0xffB5B4B4),
-                                      fontSize: 8, // Adjust font size as needed
+                                      fontSize: 8,
                                       fontWeight: FontWeight.w400),
                                   overflow: TextOverflow.ellipsis,
                                 ),
