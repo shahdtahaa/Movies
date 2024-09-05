@@ -1,11 +1,46 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../Models/moviesdetailsModel.dart'; // Adjust the import according to your file structure
+import '../Models/moviesdetailsModel.dart';
+import '../FireBase/Firebase_Functions.dart'; // Adjust the import if necessary
 
-class MovieHeader extends StatelessWidget {
+class MovieHeader extends StatefulWidget {
   final MoviesdetailsModel movieDetails;
 
   MovieHeader({required this.movieDetails});
+
+  @override
+  _MovieHeaderState createState() => _MovieHeaderState();
+}
+
+class _MovieHeaderState extends State<MovieHeader> {
+  late MoviesdetailsModel movieDetails;
+  bool isAdded = false;
+
+  @override
+  void initState() {
+    super.initState();
+    movieDetails = widget.movieDetails;
+    checkIfMovieIsAdded();
+  }
+
+  Future<void> checkIfMovieIsAdded() async {
+    final result = await FirebaseFunctions.isMovieInWishlist(movieDetails.id.toString());
+    setState(() {
+      isAdded = result;
+    });
+  }
+
+  void _toggleWishlistStatus() async {
+    setState(() {
+      isAdded = !isAdded;
+    });
+
+    if (isAdded) {
+      await FirebaseFunctions.addMovieToWishlist(movieDetails);
+    } else {
+      await FirebaseFunctions.deleteMovieFromWishlist(movieDetails.id.toString());
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +52,6 @@ class MovieHeader extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Title and Release Date
           Text(
             movieDetails.title ?? 'Unknown Title',
             style: GoogleFonts.inter(
@@ -60,14 +94,23 @@ class MovieHeader extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      Image.asset(
-                        'assets/images/bookmark.png',
-                      )
+                      Positioned(
+                        top: 8,
+                        right: 8,
+                        child: InkWell(
+                          onTap: _toggleWishlistStatus,
+                          child: Image.asset(
+                            isAdded
+                                ? 'assets/images/checkmark.png'
+                                : 'assets/images/bookmark.png',
+                          ),
+                        ),
+                      ),
                     ],
                   ),
                 ),
                 SizedBox(width: 10),
-                // Column for Genres, Overview, and Rating
+
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -75,24 +118,21 @@ class MovieHeader extends StatelessWidget {
                       // Genres
                       movieDetails.genres != null && movieDetails.genres!.isNotEmpty
                           ? Wrap(
-                        spacing: 4.0, // Horizontal spacing between genres
-                        runSpacing: 4.0, // Vertical spacing between rows
+                        spacing: 4.0,
+                        runSpacing: 4.0,
                         children: movieDetails.genres!.map((genre) {
                           return Container(
-                            padding: EdgeInsets.symmetric(
-                              horizontal: 6, // Adjust the padding to make the container smaller
-
-                            ),
+                            padding: EdgeInsets.symmetric(horizontal: 6),
                             decoration: BoxDecoration(
                               border: Border.all(color: Colors.white),
                               borderRadius: BorderRadius.circular(6),
-                              color: Colors.transparent, // Background color of each genre container
+                              color: Colors.transparent,
                             ),
                             child: Text(
                               genre.name ?? 'Unknown',
                               style: GoogleFonts.inter(
                                 color: Colors.white,
-                                fontSize: 12, // Smaller font size
+                                fontSize: 12,
                                 fontWeight: FontWeight.w400,
                               ),
                             ),
@@ -108,9 +148,9 @@ class MovieHeader extends StatelessWidget {
                         ),
                       ),
                       SizedBox(height: 8),
-                      // Overview in SingleChildScrollView
+
                       Container(
-                        height: 105, // Adjust height as needed
+                        height: 105,
                         child: SingleChildScrollView(
                           child: Text(
                             movieDetails.overview ?? 'No Overview Available',
@@ -123,32 +163,29 @@ class MovieHeader extends StatelessWidget {
                         ),
                       ),
                       // Rating
-                      SizedBox(height: 4.0,),
+                      SizedBox(height: 4.0),
                       Row(
                         children: [
                           Icon(
                             Icons.star_rounded,
                             color: Color(0xffFFBB3B),
-                            size: 17, // Adjust size as needed
+                            size: 17,
                           ),
-
-                              Text(
-                                movieDetails.voteAverage != null
-                                    ? movieDetails.voteAverage!.toStringAsFixed(1)
-                                    : 'No rating',
-                                style: GoogleFonts.poppins(
-                                  color: Colors.white,
-                                  fontSize: 13, // Adjust font size as needed
-                                  fontWeight: FontWeight.w400,
-                                ),
-                              ),
-                            ],
+                          Text(
+                            movieDetails.voteAverage != null
+                                ? movieDetails.voteAverage!.toStringAsFixed(1)
+                                : 'No rating',
+                            style: GoogleFonts.poppins(
+                              color: Colors.white,
+                              fontSize: 13,
+                              fontWeight: FontWeight.w400,
+                            ),
                           ),
                         ],
                       ),
-
+                    ],
                   ),
-
+                ),
               ],
             ),
           ),

@@ -46,6 +46,10 @@ class _SearchTabState extends State<SearchTab> {
             onChanged: (query) {
               _performSearch(query);
             },
+            style: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.w400,
+            fontSize: 14),
             decoration: InputDecoration(
               filled: true,
               fillColor: Color(0xff514F4F),

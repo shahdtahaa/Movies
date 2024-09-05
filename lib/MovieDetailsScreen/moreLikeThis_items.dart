@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:movies/FireBase/Firebase_Functions.dart';
+import 'package:movies/Models/moviesdetailsModel.dart';
 import '../Models/more_like_this_Model.dart';
 
-class MoreLikeThisSection extends StatelessWidget {
+class MoreLikeThisSection extends StatefulWidget {
   final MoreLikeThisModel? moreLikeThisModel;
   final Function(int) onMovieTap;
 
@@ -13,11 +15,59 @@ class MoreLikeThisSection extends StatelessWidget {
   }) : super(key: key);
 
   @override
+  State<MoreLikeThisSection> createState() => _MoreLikeThisSectionState();
+
+}
+
+class _MoreLikeThisSectionState extends State<MoreLikeThisSection> {
+  Map<int, bool> wishlistStatus = {};
+
+  @override
+  void initState() {
+    super.initState();
+    _initializeWishlistStatus();
+  }
+
+  Future<void> _initializeWishlistStatus() async {
+    if (widget.moreLikeThisModel != null) {
+      final statuses = await Future.wait(
+        widget.moreLikeThisModel!.results!.map((movie) async {
+          final isInWishlist = await FirebaseFunctions.isMovieInWishlist(movie.id.toString());
+          return MapEntry(movie.id!, isInWishlist);
+        }),
+      );
+      setState(() {
+        wishlistStatus = Map.fromEntries(statuses);
+      });
+    }
+  }
+
+  void _toggleWishlist(int movieId) async {
+    final isAdded = wishlistStatus[movieId] ?? false;
+    setState(() {
+      wishlistStatus[movieId] = !isAdded;
+    });
+    if (isAdded) {
+      await FirebaseFunctions.deleteMovieFromWishlist(movieId.toString());
+    } else {
+      final movie = widget.moreLikeThisModel?.results?.firstWhere((movie) => movie.id == movieId);
+      if (movie != null) {
+        final movieDetails = MoviesdetailsModel(
+          id: movie.id,
+          title: movie.title!,
+          releaseDate: movie.releaseDate!,
+          posterPath: movie.posterPath!,
+        );
+        await FirebaseFunctions.addMovieToWishlist(movieDetails);
+      }
+    }
+  }
+  @override
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
 
-    return moreLikeThisModel == null
+    return widget.moreLikeThisModel == null
         ? Center(child: CircularProgressIndicator())
         : Container(
       width: width,
@@ -42,9 +92,10 @@ class MoreLikeThisSection extends StatelessWidget {
               child: SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
                 child: Row(
-                  children: moreLikeThisModel!.results!.map((movie) {
+                  children: widget.moreLikeThisModel!.results!.map((movie) {
+                    final isAdded = wishlistStatus[movie.id!] ?? false;
                     return GestureDetector(
-                      onTap: () => onMovieTap(movie.id!),
+                      onTap: () => widget.onMovieTap(movie.id!),
                       child: Container(
                         width: width * 0.25,
                         height: 240,
@@ -71,9 +122,15 @@ class MoreLikeThisSection extends StatelessWidget {
                                 child: Column(
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     mainAxisAlignment: MainAxisAlignment.start,
-                                  children: [Image.asset(
-                                    'assets/images/bookmark.png',
-                                  ),
+                                  children: [
+                                    InkWell(
+                                      onTap: () => _toggleWishlist(movie.id!),
+                                      child: Image.asset(
+                                        isAdded
+                                            ? 'assets/images/checkmark.png'
+                                            : 'assets/images/bookmark.png',
+                                      ),
+                                    ),
                             ]
                                 ),
                               ),
