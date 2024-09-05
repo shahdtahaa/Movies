@@ -4,14 +4,15 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import '../Models/more_like_this_Model.dart';
 import '../Models/moviesdetailsModel.dart';
-import 'moreLikeThis_items.dart';// Ensure the correct import path
-import 'Details_items.dart'; // Import the MovieHeader widget
+import 'moreLikeThis_items.dart';
+import 'Details_items.dart';
 
 class MoviedetailsScreen extends StatefulWidget {
   static const String routeName = "Movie details";
   final int movieId;
+  final String query;
 
-  const MoviedetailsScreen({required this.movieId, super.key});
+  const MoviedetailsScreen({required this.movieId,this.query = '', super.key});
 
   @override
   State<MoviedetailsScreen> createState() => _MoviedetailsScreenState();
@@ -24,11 +25,11 @@ class _MoviedetailsScreenState extends State<MoviedetailsScreen> {
   @override
   void initState() {
     super.initState();
-    fetchMovieDetails(widget.movieId);
+    fetchMovieDetails(widget.movieId,widget.query);
     fetchSimilarMovies(widget.movieId);
   }
 
-  Future<void> fetchMovieDetails(int movieId) async {
+  Future<void> fetchMovieDetails(int movieId,String query) async {
     final response = await http.get(
       Uri.parse(
           'https://api.themoviedb.org/3/movie/$movieId?api_key=785dd30491a7a0087c720824731840ff'),
@@ -85,7 +86,7 @@ class _MoviedetailsScreenState extends State<MoviedetailsScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
-            height: height * 0.25, // Adjusted height for backdrop image
+            height: height * 0.25,
             width: width,
             decoration: BoxDecoration(
               image: DecorationImage(
@@ -96,7 +97,7 @@ class _MoviedetailsScreenState extends State<MoviedetailsScreen> {
             ),
           ),
           Container(
-            height: height * 0.32, // Adjusted height for MovieHeader
+            height: height * 0.32,
             width: width,
             child: MovieHeader(movieDetails: moviesdetailsModel!),
           ),
@@ -108,7 +109,7 @@ class _MoviedetailsScreenState extends State<MoviedetailsScreen> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => MoviedetailsScreen(movieId: movieId),
+                    builder: (context) => MoviedetailsScreen(movieId: movieId,query: widget.query,),
                   ),
                 );
               },

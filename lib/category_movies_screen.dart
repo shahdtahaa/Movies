@@ -3,6 +3,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
+import 'package:movies/Search%20Screen/MovieService.dart';
+
 class MoviesInCategoryScreen extends StatefulWidget {
   final int genreId;
   final String genreName;
@@ -15,12 +17,18 @@ class MoviesInCategoryScreen extends StatefulWidget {
 
 class _MoviesInCategoryScreenState extends State<MoviesInCategoryScreen> {
   late Future<List<Movie>> futureMovies;
+  final MovieService movieService = MovieService();
 
   @override
   void initState() {
     super.initState();
-    futureMovies = displayMoviesByGenre(widget.genreId);
+    futureMovies = movieService.fetchMoviesByGenre(widget.genreId); // Use the service
   }
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   futureMovies = displayMoviesByGenre(widget.genreId);
+  // }
 
   Future<List<Movie>> displayMoviesByGenre(int genreId) async {
     final response = await http.get(Uri.parse('https://api.themoviedb.org/3/discover/movie?api_key=785dd30491a7a0087c720824731840ff&with_genres=$genreId'));
