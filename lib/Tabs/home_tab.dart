@@ -17,6 +17,7 @@ class HomeTab extends StatelessWidget {
           Newreleasesitems(),
           SizedBox(height:15),
           Recomendeditems(),
+
         ],
       );
   }

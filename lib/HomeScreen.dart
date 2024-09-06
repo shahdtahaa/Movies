@@ -65,7 +65,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 AssetImage('assets/images/wishList.png',),
                 size: 35,
               ),
-              label: 'WishList'),
+              label: 'Watchlist'),
         ]
     ),
       body:tabs[selectedindex],
@@ -77,6 +77,6 @@ class _HomeScreenState extends State<HomeScreen> {
    HomeTab(),
     SearchTab(),
     BrowseTab(),
-    WishlistTab()
+    WishlistScreen()
   ];
 }

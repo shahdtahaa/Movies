@@ -4,6 +4,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
+import 'package:movies/FireBase/Firebase_Functions.dart';
+import 'package:movies/Models/moviesdetailsModel.dart';
 import '../Models/topRatedModel.dart';
 import '../MovieDetailsScreen/MovieDetails_screen.dart';
 
@@ -16,6 +18,7 @@ class Recomendeditems extends StatefulWidget {
 
 class _RecomendeditemsState extends State<Recomendeditems> {
   TopRatedModel? topRatedModel;
+  Map<int, bool> wishlistStatus = {};
 
   @override
   void initState() {
@@ -30,14 +33,44 @@ class _RecomendeditemsState extends State<Recomendeditems> {
     );
 
     if (response.statusCode == 200) {
+      final model = TopRatedModel.fromJson(json.decode(response.body));
+      final movies = model.results ?? [];
+
+      final statuses = await Future.wait(
+        movies.map((movie) async {
+          final isInWishlist = await FirebaseFunctions.isMovieInWishlist(movie.id.toString());
+          return MapEntry(movie.id!, isInWishlist);
+        }),
+      );
+
       setState(() {
-        topRatedModel = TopRatedModel.fromJson(json.decode(response.body));
+        topRatedModel = model;
+        wishlistStatus = Map.fromEntries(statuses);
       });
     } else {
       throw Exception('Failed to load top-rated movies');
     }
   }
-
+  void _toggleWishlistStatus(int movieId, bool isAdded) async {
+    //final isAdded = wishlistStatus[movieId] ?? false;
+    setState(() {
+      wishlistStatus[movieId] = !isAdded;
+    });
+    if (isAdded) {
+      await FirebaseFunctions.deleteMovieFromWishlist(movieId.toString());
+    } else {
+      final movie = topRatedModel?.results?.firstWhere((m) => m.id == movieId);
+      if (movie != null) {
+        final movieDetails = MoviesdetailsModel(
+          id: movie.id!,
+          title: movie.title!,
+          releaseDate: movie.releaseDate!,
+          posterPath: movie.posterPath!,
+        );
+        await FirebaseFunctions.addMovieToWishlist(movieDetails);
+      }
+    }
+  }
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -61,6 +94,7 @@ class _RecomendeditemsState extends State<Recomendeditems> {
                   scrollDirection: Axis.horizontal,
                   child: Row(
                     children: topRatedModel!.results!.map((movie) {
+                      final isAdded = wishlistStatus[movie.id!] ?? false;
                       return GestureDetector(
                         onTap: () {
                           Navigator.push(
@@ -101,8 +135,15 @@ class _RecomendeditemsState extends State<Recomendeditems> {
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       mainAxisAlignment: MainAxisAlignment.start,
                                       children: [
-                                        Image.asset(
-                                          'assets/images/bookmark.png',
+                                        InkWell(
+                                          onTap: () {
+                                            _toggleWishlistStatus(movie.id!, isAdded);
+                                          },
+                                          child: Image.asset(
+                                            isAdded
+                                                ? 'assets/images/checkmark.png'
+                                                : 'assets/images/bookmark.png',
+                                          ),
                                         )
                                       ],
                                     ),
