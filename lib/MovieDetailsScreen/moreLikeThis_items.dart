@@ -47,6 +47,7 @@ class _MoreLikeThisSectionState extends State<MoreLikeThisSection> {
     setState(() {
       wishlistStatus[movieId] = !isAdded;
     });
+
     if (isAdded) {
       await FirebaseFunctions.deleteMovieFromWishlist(movieId.toString());
     } else {
